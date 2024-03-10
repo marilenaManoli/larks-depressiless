@@ -1,27 +1,11 @@
-
-#depressiLess/__init__.py
+"""
+depressiLess/__init__.py
+Individual app's package initializer
 
 """
-This file sets up the Flask application, initializes the database with depressiless_db, 
-and registers the depressiless_bp Blueprint. 
-It also sets up CORS for the specified routes.
-"""
+from flask import Blueprint
 
-from flask import Flask
-from flask_cors import CORS
-from .api.routes import depressiless_bp
-from .config import Config
-from .db import depressiless_db
+depressiLess_bp = Blueprint('depressiLess', __name__)
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
+from .api import speech_to_text, text_class, user_info, mental_health_history, medical_history
 
-    depressiless_db.init_app(app)
-    with app.app_context():
-        depressiless_db.create_all()
-
-    CORS(app, resources={r"/depressiLess/*": {"origins": "http://localhost:3000"}})
-    app.register_blueprint(depressiless_bp, url_prefix='/depressiless')
-
-    return app

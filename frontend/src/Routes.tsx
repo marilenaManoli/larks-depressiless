@@ -45,6 +45,15 @@ import EaseMindAnxietyLevelTest from './apps/EaseMind/AnxietyLevelTest';
 import EaseMindChatBox from './apps/EaseMind/ChatBox';
 
 import DepressiLess from './apps/DepressiLess/DepressiLess';
+import DepressiLessUserInfoForm from './apps/DepressiLess/user_information/UserInfoForm';
+import DepressiLessQuestionnaireForm from './apps/DepressiLess/questionnaire/QuestionnaireForm';
+import DepressiLessContactInfoForm from './apps/DepressiLess/user_information/ContactInfoForm';
+import DepressiLessUserMedicalHistory from './apps/DepressiLess/user_information/UserMedicalHistory';
+import DepressiLessUserMentalHealthHistory from './apps/DepressiLess/user_information/UserMentalHealthHistory';
+import DepressiLessDepressionScreeningForm from './apps/DepressiLess/questionnaire/DepressionScreeningForm';
+import DepressiLessChatSupport from './apps/DepressiLess/support_chat/speech_input/ChatSupport';
+import DepressiLessSpeechRec from './apps/DepressiLess/support_chat/speech_input/SpeechRec';
+import DepressiLessTextClassification from './apps/DepressiLess/support_chat/text_input/TextClassification';
 
 // If we want to check each time? Maybe it could be a use memo for when the token changes only?
 // https://stackoverflow.com/questions/60017604/react-router-check-that-jwt-is-valid-before-rendering-a-private-route
@@ -103,6 +112,15 @@ function Routes() {
         <Route path="/autism_instructions/questionnaire" element={<AutismDetectorQuestionnaire />} />
 
         <Route path="/DepressiLess" element={<DepressiLess />} />
+        <Route path="/DepressiLess/UserInfoForm" element={<DepressiLessUserInfoForm />} />
+        <Route path="/DepressiLess/QuestionnaireForm" element={<DepressiLessQuestionnaireForm />} />
+        <Route path="/DepressiLess/ContactInfoForm" element={<DepressiLessContactInfoForm />} />
+        <Route path="/DepressiLess/UserMentalHealthHistory" element={<DepressiLessUserMentalHealthHistory />} />
+        <Route path="/DepressiLess/UserMedicalHistory" element={<DepressiLessUserMedicalHistory />} />
+        <Route path="/DepressiLess/DepressionScreeningForm" element={<DepressiLessDepressionScreeningForm />} />
+        <Route path="/DepressiLess/ChatSupport" element={<DepressiLessChatSupport />} />
+        <Route path="/DepressiLess/SpeechRec" element={<DepressiLessSpeechRec />} />
+        <Route path="/DepressiLess/TextClassification" element={<DepressiLessTextClassification />} />
 
       </Route>
 

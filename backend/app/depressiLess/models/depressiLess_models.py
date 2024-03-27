@@ -30,7 +30,7 @@ class UserMentalHealthHistory(db.Model):
     stressLevels = db.Column(db.Text, nullable=False)
     copingMechanisms = db.Column(db.Text, nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('user_information.id'), nullable=False)  # Adjusted ForeignKey to match UserInfo table name
+    user_id = db.Column(db.Integer, db.ForeignKey('user_information.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -49,5 +49,33 @@ class UserMedicalHistory(db.Model):
 
     def __repr__(self):
         return f'<UserMedicalHistory {self.id}>'
+
+class QuestionnaireForm(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    currentMood = db.Column(db.Text, nullable=True)
+    recentExperiences = db.Column(db.Text, nullable=True)
+    emotionalState = db.Column(db.Text, nullable=True)
+    emotionalTriggers = db.Column(db.Text, nullable=True)
+    copingMethods = db.Column(db.Text, nullable=True)
+    safetyCheck = db.Column(db.Text, nullable=True)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('user_information.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<QuestionnaireForm {self.id}>'
+
+class TextClassification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_input = db.Column(db.Text, nullable=False)
+    classification = db.Column(db.String(120), nullable=False)
+    confidence = db.Column(db.Float, nullable=False)  # Confidence score of the classification
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('user_information.id'), nullable=False)
+    
+    def __repr__(self):
+        return f'<TextClassification {self.id} - {self.classification}>'
 
 

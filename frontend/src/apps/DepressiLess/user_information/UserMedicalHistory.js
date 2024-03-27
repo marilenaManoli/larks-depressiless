@@ -73,7 +73,10 @@ function UserMedicalHistory() {
       .then((response) => {
         if (response.status === 201) {
           console.log('Submission successful:', response.data);
-          navigate('/DepressiLess');
+          setFeedbackMessage('Information was successfully submitted.');
+          setTimeout(() => {
+            navigate('/DepressiLess/QuestionnaireForm', { state: { userId: response.data.id } });
+          }, 2000);
         } else {
           console.log('Submission response not successful:', response);
           setFeedbackMessage('Failed to submit medical history. Please try again.');

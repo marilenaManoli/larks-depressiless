@@ -22,7 +22,7 @@ def validate_medical_history_data(data):
 @auth_bp.route('/api/depressiLess/UserMedicalHistory', methods=['POST'])
 def create_medical_history():
     data = request.get_json()
-     print("Received data:", data)
+    print("Received data:", data)
     validation_errors = validate_medical_history_data(data)
     
     if validation_errors:

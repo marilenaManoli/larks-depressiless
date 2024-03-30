@@ -93,7 +93,7 @@ function DepressiLess() {
           <Link to="/depressiless/ChatSupport">
             <img src={supportChatLogo} alt="Chat with Support" style={buttonStyle} />
           </Link>
-          <Link to="/depressiless/online-resources">
+          <Link to="/depressiless/OnlineResources">
             <img src={onlineResourcesLogo} alt="Online Resources" style={buttonStyle} />
           </Link>
         </div>

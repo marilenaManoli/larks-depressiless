@@ -1,5 +1,5 @@
 // TextClassification.js
-
+/*
 import React, { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import { AuthTokenContext } from '../../../App'; // Make sure AuthTokenContext is properly imported
@@ -79,3 +79,4 @@ function TextClassification() {
 }
 
 export default TextClassification;
+*/

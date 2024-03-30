@@ -1,7 +1,9 @@
-
+"""
 #depressiLess/api/speech_to_text.py
 
 from flask import request, jsonify
+
+
 import soundfile as sf
 from transformers import Wav2Vec2Tokenizer, Wav2Vec2ForCTC
 import torch
@@ -37,3 +39,4 @@ def transcribe_audio():
         audio_input = io.BytesIO(file.read())
         transcription = speech_to_text(audio_input)
         return jsonify({'transcribedText': transcription})
+"""

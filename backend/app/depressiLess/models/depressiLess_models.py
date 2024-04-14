@@ -20,8 +20,7 @@ class UserInformation(db.Model):
     def __repr__(self):
         return f'<User {self.name}>'
 
-    # Assuming a relationship (One to Many) between UserInfo and UserMentalHealthHistory
-    # Need to add a foreign key to the UserMentalHealthHistory model for this relationship to work
+    # Relationship between UserInfo and UserMentalHealthHistory
     mental_health_histories = db.relationship('UserMentalHealthHistory', backref='user', lazy=True)
 
 class UserMentalHealthHistory(db.Model):
@@ -52,12 +51,11 @@ class UserMedicalHistory(db.Model):
 
 class QuestionnaireForm(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    currentMood = db.Column(db.Text, nullable=True)
-    recentExperiences = db.Column(db.Text, nullable=True)
-    emotionalState = db.Column(db.Text, nullable=True)
-    emotionalTriggers = db.Column(db.Text, nullable=True)
-    copingMethods = db.Column(db.Text, nullable=True)
-    safetyCheck = db.Column(db.Text, nullable=True)
+    recentExperiences = db.Column(db.Text, nullable=False)
+    emotionalState = db.Column(db.Text, nullable=False)
+    emotionalTriggers = db.Column(db.Text, nullable=False)
+    copingMethods = db.Column(db.Text, nullable=False)
+    safetyCheck = db.Column(db.Text, nullable=False)
     
     user_id = db.Column(db.Integer, db.ForeignKey('user_information.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -66,6 +64,15 @@ class QuestionnaireForm(db.Model):
     def __repr__(self):
         return f'<QuestionnaireForm {self.id}>'
 
+class ChatMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_information.id'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<ChatMessage {self.id} - User: {self.user_id} - Message: {self.message}>'
+    
 class TextClassification(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_input = db.Column(db.Text, nullable=False)
@@ -77,5 +84,3 @@ class TextClassification(db.Model):
     
     def __repr__(self):
         return f'<TextClassification {self.id} - {self.classification}>'
-
-

@@ -169,3 +169,42 @@ export const proceedButtonStyle = {
     backgroundColor: '#388E3C',
   },
 };
+
+export const privacyNoticeContainerStyle = {
+  maxWidth: '900px',
+  margin: 'auto',
+  padding: '20px',
+  backgroundColor: '#f5f5f5', // This sets the background color to a light grey.
+  gap: '20px',
+  paddingTop: '50px',
+};
+
+export const privacyNoticeheaderStyle = {
+  textAlign: 'center',
+  color: '#333',
+};
+
+export const privacyNoticesectionStyle = {
+  margin: '20px 0',
+};
+
+export const privacyNoticecontactEmailStyle = {
+  color: '#065A82',
+  textDecoration: 'none',
+};
+
+export const baseButtonStyle = {
+  padding: '10px 20px',
+  paddingLeft: '10px',
+  margin: '5px 5px',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  transition: 'background-color 0.2s ease-in-out',
+  textDecoration: 'none', // Added for <Link>
+  display: 'inline-flex', // Added for <Link> to align like buttons
+  alignItems: 'center', // Added for <Link> to align text like buttons
+  justifyContent: 'center', // Center text
+  fontSize: '1rem', // Match your button font size
+  backgroundColor: '#B9B9B9',
+};

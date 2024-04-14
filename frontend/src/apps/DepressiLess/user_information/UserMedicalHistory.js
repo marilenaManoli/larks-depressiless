@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import StepIndicator from '../common_components/StepIndicator';
-import { AuthTokenContext } from '../../../App';
+import { AuthTokenContext } from '../../../App'; // Import AuthTokenContext
 import {
   containerWithStepsStyle, formContainerStyle, buttonStyle, inputContainerStyle, inputStyle,
 } from '../styles/Styles';
@@ -14,85 +14,77 @@ const BASEURL = process.env.NODE_ENV === 'development'
 function UserMedicalHistory() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { token } = useContext(AuthTokenContext); // Assuming token is stored in AuthTokenContext
+  const { token } = React.useContext(AuthTokenContext);
 
+  // Initial user_id from sessionStorage or location state
+  const initialUserId = location.state?.userId || sessionStorage.getItem('userId');
   const [medicalHistoryInfo, setMedicalHistoryInfo] = useState({
     pastMedicalHistory: '',
     familyMedicalHistory: '',
     medicationHistory: '',
-    user_id: location.state?.userId,
+    user_id: initialUserId, // Initialize with user_id
   });
   const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const userIdFromLocation = location.state?.userId;
+    console.log('UserId at start of Medical History:', initialUserId);
+    if (userIdFromLocation && userIdFromLocation !== medicalHistoryInfo.user_id) {
+      setMedicalHistoryInfo((info) => ({ ...info, user_id: userIdFromLocation }));
+    }
+    // Also update sessionStorage to ensure it's always current
+    sessionStorage.setItem('userId', userIdFromLocation);
+  }, [location.state?.userId, medicalHistoryInfo.user_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('Received userId:', location.state?.userId);
     setMedicalHistoryInfo((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const [errors, setErrors] = useState({});
   const validateForm = () => {
     let formIsValid = true;
     const newErrors = {};
-
     if (!medicalHistoryInfo.pastMedicalHistory || !medicalHistoryInfo.familyMedicalHistory || !medicalHistoryInfo.medicationHistory) {
       newErrors.form = 'All fields are required.';
       formIsValid = false;
     }
-
     setErrors(newErrors);
     return formIsValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Submitting Medical History with userId:', medicalHistoryInfo.user_id);
     if (!validateForm()) {
       setFeedbackMessage('Please correct the errors before submitting.');
       return;
     }
 
-    await axios
-      .post(
-        `${BASEURL}api/depressiLess/UserMedicalHistory`,
-        {
-          pastMedicalHistory: medicalHistoryInfo.pastMedicalHistory,
-          familyMedicalHistory: medicalHistoryInfo.familyMedicalHistory,
-          medicationHistory: medicalHistoryInfo.medicationHistory,
-          user_id: medicalHistoryInfo.user_id,
-        },
+    try {
+      const response = await axios.post(
+        `${BASEURL}/api/depressiLess/UserMedicalHistory`,
+        medicalHistoryInfo,
         {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         },
-      )
-      .then((response) => {
-        if (response.status === 201) {
-          console.log('Submission successful:', response.data);
-          setFeedbackMessage('Information was successfully submitted.');
-          setTimeout(() => {
-            navigate('/DepressiLess/QuestionnaireForm', { state: { userId: response.data.id } });
-          }, 2000);
-        } else {
-          console.log('Submission response not successful:', response);
-          setFeedbackMessage('Failed to submit medical history. Please try again.');
-        }
-      })
-      .catch((error) => {
-        console.error('Submission error:', error.response || error);
-        if (error.response && error.response.data.errors) {
-          console.error('Validation errors:', error.response.data.errors);
-          setFeedbackMessage('Failed to submit medical history. Please correct the errors and try again.');
-          // Optionally, display the error messages to the user
-          setErrors(error.response.data.errors);
-        } else {
-          setFeedbackMessage('Failed to submit medical history. Please try again.');
-        }
-      });
+      );
+
+      if (response.status === 201) {
+        console.log('Submission successful:', response.data);
+        setFeedbackMessage('Information was successfully submitted.');
+        navigate('/DepressiLess/QuestionnaireForm', { state: { userId: response.data.userId } });
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setFeedbackMessage('Failed to submit medical history. Please try again.');
+    }
   };
 
   return (

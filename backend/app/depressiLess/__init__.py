@@ -7,6 +7,6 @@ from flask import Blueprint
 
 depressiLess_bp = Blueprint('depressiLess', __name__)
 
-from .api import user_info, mental_health_history, medical_history, questionnaire
-# from .api import speech_to_text, text_class, user_info, mental_health_history, medical_history, questionnaire
-
+from .api import user_info, mental_health_history, medical_history, questionnaire, chat
+from .models.ai_model import text_analysis
+from .models import depression_model

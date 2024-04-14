@@ -1,7 +1,5 @@
-// QuestionnaireForm.js
-
 import React, { useState, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthTokenContext } from '../../../App';
 import {
@@ -13,99 +11,79 @@ const BASEURL = process.env.NODE_ENV === 'development'
   : process.env.REACT_APP_PROD;
 
 function QuestionnaireForm() {
-  const location = useLocation();
   const navigate = useNavigate();
   const { token } = useContext(AuthTokenContext);
 
+  const [feedbackMessage, setFeedbackMessage] = useState('');
   const [responses, setResponses] = useState({
-    currentMood: '',
     recentExperiences: '',
     emotionalState: '',
     emotionalTriggers: '',
     copingMethods: '',
     safetyCheck: '',
-    user_id: location.state?.userId,
   });
-  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log('Received userId:', location.state?.userId);
     setResponses((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
 
-  const [errors, setErrors] = useState({});
   const validateForm = () => {
-    let formIsValid = true;
+    let isValid = true;
     const newErrors = {};
-
-    if (!responses.currentMood
-      || !responses.recentExperiences
-      || !responses.emotionalState
-      || !responses.emotionalTriggers
-      || !responses.copingMethods
-      || !responses.safetyCheck) {
-      newErrors.form = 'All fields are required.';
-      formIsValid = false;
-    }
+    Object.entries(responses).forEach(([key, value]) => {
+      if (!value.trim()) {
+        newErrors[key] = 'This field is required.';
+        isValid = false;
+      }
+    });
 
     setErrors(newErrors);
-    return formIsValid;
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) {
       setFeedbackMessage('Please correct the errors before submitting.');
       return;
     }
 
-    await axios
-      .post(
-        `${BASEURL}api/depressiLess/QuestionnaireForm`,
-        {
-          currentMood: responses.currentMood,
-          recentExperiences: responses.recentExperiences,
-          emotionalState: responses.emotionalState,
-          emotionalTriggers: responses.emotionalTriggers,
-          copingMethods: responses.copingMethods,
-          safetyCheck: responses.safetyCheck,
-          user_id: responses.user_id,
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) {
+      setFeedbackMessage('User ID is missing, cannot submit.');
+      return;
+    }
+
+    const formData = {
+      ...responses,
+      user_id: userId,
+    };
+
+    try {
+      const url = `${BASEURL}/api/depressiLess/QuestionnaireForm`;
+      const response = await axios.post(url, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then((response) => {
-        if (response.status === 201) {
-          console.log('Submission successful:', response.data);
-          console.log('Navigating with userId:', response.data.id);
-          setFeedbackMessage('Information was successfully submitted.');
-          setTimeout(() => {
-            navigate('/DepressiLess/DepressionScreeningForm', { state: { userId: response.data.id } });
-          }, 1000);
-        } else {
-          console.log('Submission response not successful:', response);
-          setFeedbackMessage('Failed to submit. Please try again.');
-        }
-      })
-      .catch((error) => {
-        console.error('Submission error:', error.response || error);
-        if (error.response && error.response.data.errors) {
-          console.error('Validation errors:', error.response.data.errors);
-          setFeedbackMessage('Failed to submit. Please correct the errors and try again.');
-          // Optionally, display the error messages to the user
-          setErrors(error.response.data.errors);
-        } else {
-          setFeedbackMessage('Failed to submit. Please try again.');
-        }
       });
+
+      if (response.status === 201) {
+        navigate('/DepressiLess/DepressionScreeningForm', { state: { userId } });
+        setFeedbackMessage('Information was successfully submitted.');
+      } else {
+        throw new Error('Failed to submit. Please try again.');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setFeedbackMessage(error.message || 'An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -118,17 +96,6 @@ function QuestionnaireForm() {
           </h3>
         </div>
         <form onSubmit={handleSubmit}>
-          <div style={inputContainerStyle}>
-            <label htmlFor="currentMood">Can you describe your mood today in your own words?</label>
-            <textarea
-              id="currentMood"
-              name="currentMood"
-              value={responses.currentMood}
-              onChange={handleChange}
-              style={inputStyle}
-            />
-            {errors.currentMood && <p style={{ color: 'red' }}>{errors.currentMood}</p>}
-          </div>
           <div style={inputContainerStyle}>
             <label htmlFor="recentExperiences">Are there any worries or challenges that you have been facing lately?</label>
             <textarea
@@ -176,13 +143,13 @@ function QuestionnaireForm() {
           <div style={inputContainerStyle}>
             <label htmlFor="safetyCheck">Lastly, it is important for us to know: have you had any thoughts of harming yourself or others?</label>
             <textarea
-              id="sefetyCheck"
+              id="safetyCheck"
               name="safetyCheck"
               value={responses.safetyCheck}
               onChange={handleChange}
               style={inputStyle}
             />
-            {errors.sefetyCheck && <p style={{ color: 'red' }}>{errors.sefetyCheck}</p>}
+            {errors.safetyCheck && <p style={{ color: 'red' }}>{errors.safetyCheck}</p>}
           </div>
           <input type="submit" value="Submit" style={buttonStyle} />
         </form>

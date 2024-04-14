@@ -57,6 +57,7 @@ function SignUp() {
           setIsError(FRONTENDERROR);
         } else if (response.status === 200) {
           setToken(response.data.token);
+          sessionStorage.setItem('userId', response.data.userId);
           setIsError(null); // Reset error state on successful signup
           navigate('/home');
         } else if (response.status === 409) {

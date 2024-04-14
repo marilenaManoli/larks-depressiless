@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import {
   containerStyle, wrapperStyle, buttonStyle, warningStyle, inputContainerStyle,
   radioGroupStyle,
 } from '../styles/Styles';
+
+const BASEURL = process.env.NODE_ENV === 'development'
+  ? process.env.REACT_APP_DEV
+  : process.env.REACT_APP_PROD;
 
 function DepressionScreeningForm() {
   const navigate = useNavigate();
@@ -27,13 +32,25 @@ function DepressionScreeningForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Questionnaire responses:', responses);
-    setTimeout(() => {
-      alert('Questionnaire submitted successfully!');
-      navigate('/DepressiLess'); // Adjust the path as necessary
-    }, 1000);
+
+    try {
+      const response = await axios.post(
+        `${BASEURL}api/depressiLess/DepressionScreeningForm`,
+        responses,
+      );
+      if (response.status === 201) {
+        alert('Information submitted successfully!');
+        navigate('/DepressiLess'); // Adjust the path as necessary
+      } else {
+        console.log('Failed to submit :', response);
+      }
+    } catch (error) {
+      console.error('Failed to submit :', error);
+      // Handle error and provide feedback to the user
+    }
   };
 
   const smokingOptions = ['Never', 'Occasionally', 'Regularly'];

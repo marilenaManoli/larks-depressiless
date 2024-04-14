@@ -1,6 +1,7 @@
 // UserInfoForm.js
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { AuthTokenContext } from '../../../App';
@@ -10,7 +11,7 @@ import {
   buttonStyle, inputContainerStyle, inputStyle,
   modalBackdropStyle, modalStyle, modalHeaderStyle,
   modalContentStyle, modalFooterStyle,
-  proceedButtonStyle, cancelButtonStyle,
+  proceedButtonStyle, cancelButtonStyle, baseButtonStyle,
 } from '../styles/Styles';
 
 const BASEURL = process.env.NODE_ENV === 'development'
@@ -45,6 +46,8 @@ function PrivacyModal({ onProceed, onCancel }) {
         <div style={modalFooterStyle}>
           <button type="button" onClick={onProceed} style={proceedButtonStyle}>Proceed</button>
           <button type="button" onClick={onCancel} style={cancelButtonStyle}>Cancel</button>
+          {/* Add a link or button to navigate to the Terms of Service page */}
+          <Link to="/DepressiLess/TermsOfService" style={baseButtonStyle}>Read Terms of Service and Privacy Policy</Link>
         </div>
       </div>
     </div>
@@ -147,10 +150,11 @@ function UserInfoForm() {
       )
       .then((response) => {
         if (response.status === 201) {
-          console.log('yay');
+          sessionStorage.setItem('userId', response.data.id);
+          console.log('UserId saved in sessionStorage:', sessionStorage.getItem('userId'));
           navigate('/DepressiLess/UserMentalHealthHistory', { state: { userId: response.data.id } });
         } else {
-          console.log('sad');
+          console.log('Failed to receive userId:', response);
         }
       });
 

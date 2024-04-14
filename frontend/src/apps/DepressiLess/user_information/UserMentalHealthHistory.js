@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import StepIndicator from '../common_components/StepIndicator';
@@ -14,15 +14,27 @@ const BASEURL = process.env.NODE_ENV === 'development'
 function UserMentalHealthHistory() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { token } = useContext(AuthTokenContext);
+  const { token } = React.useContext(AuthTokenContext);
 
+  // Initialize user_id from sessionStorage or location state
+  const initialUserId = location.state?.userId || sessionStorage.getItem('userId');
   const [mentalHealthInfo, setMentalHealthInfo] = useState({
     psychiatricHistory: '',
     stressLevels: '',
     copingMechanisms: '',
-    user_id: location.state?.userId,
+    user_id: initialUserId, // Initialize with user_id
   });
   const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    // Ensure the user ID is updated if it changes in the location state
+    const userIdFromLocation = location.state?.userId;
+    console.log('UserId at start of Mental Health History:', initialUserId);
+    if (userIdFromLocation && userIdFromLocation !== mentalHealthInfo.user_id) {
+      setMentalHealthInfo((info) => ({ ...info, user_id: userIdFromLocation }));
+    }
+  }, [location.state, mentalHealthInfo.user_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,63 +44,20 @@ function UserMentalHealthHistory() {
     }));
   };
 
-  const [errors, setErrors] = useState({});
   const validateForm = () => {
     let formIsValid = true;
     const newErrors = {};
-
-    if (!mentalHealthInfo.psychiatricHistory || !mentalHealthInfo.stressLevels || !mentalHealthInfo.copingMechanisms) {
+    if (!mentalHealthInfo.psychiatricHistory.trim() || !mentalHealthInfo.stressLevels.trim() || !mentalHealthInfo.copingMechanisms.trim()) {
       newErrors.form = 'All fields are required.';
       formIsValid = false;
     }
-
     setErrors(newErrors);
     return formIsValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
-      setFeedbackMessage('Please correct the errors before submitting.');
-      return;
-    }
-
-    await axios
-      .post(
-        `${BASEURL}api/depressiLess/UserMentalHealthHistory`,
-        {
-          psychiatricHistory: mentalHealthInfo.psychiatricHistory,
-          stressLevels: mentalHealthInfo.stressLevels,
-          copingMechanisms: mentalHealthInfo.copingMechanisms,
-          user_id: mentalHealthInfo.user_id,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then((response) => {
-        if (response.status === 201) {
-          console.log('Submission successful:', response.data);
-          console.log('Navigating with userId:', response.data.id);
-          navigate('/DepressiLess/UserMedicalHistory', { state: { userId: response.data.id } });
-        } else {
-          console.log('Submission response not successful:', response);
-          setFeedbackMessage('Failed to submit mental health history. Please try again.');
-        }
-      })
-      .catch((error) => {
-        console.error('Submission error:', error.response || error);
-        setFeedbackMessage('Failed to submit mental health history. Please try again.');
-      });
-  };
-
-  /*
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+    console.log('Submitting Mental Health History with userId:', mentalHealthInfo.user_id);
     if (!validateForm()) {
       setFeedbackMessage('Please correct the errors before submitting.');
       return;
@@ -96,7 +65,7 @@ function UserMentalHealthHistory() {
 
     try {
       const response = await axios.post(
-        `${BASEURL}api/depressiLess/UserMentalHealthHistory`,
+        `${BASEURL}/api/depressiLess/UserMentalHealthHistory`,
         mentalHealthInfo,
         {
           headers: {
@@ -107,17 +76,16 @@ function UserMentalHealthHistory() {
       );
 
       if (response.status === 201) {
-        console.log('yay');
-        navigate('/DepressiLess/UserMedicalHistory');
-      } else {
-        console.log('sad');
+        console.log('Submission successful:', response.data);
+        setFeedbackMessage('Information was successfully submitted.');
+        navigate('/DepressiLess/UserMedicalHistory', { state: { userId: mentalHealthInfo.user_id } });
       }
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      alert('Failed to submit mental health history. Please try again.');
+      console.error('Submission error:', error.response || error);
+      setFeedbackMessage('Failed to submit mental health history. Please try again.');
     }
   };
-*/
+
   return (
     <div style={containerWithStepsStyle}>
       <StepIndicator currentStep={1} />

@@ -70,6 +70,7 @@ function SignIn() {
       if (response.status === 200) {
         setToken(response.data.token);
         sessionStorage.setItem('email', JSON.stringify(response.data.email));
+        sessionStorage.setItem('userId', response.data.userId);
         navigate('/home');
       } else {
         setIsFilled(false);

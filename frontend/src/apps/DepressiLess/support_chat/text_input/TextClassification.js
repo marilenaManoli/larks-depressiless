@@ -1,25 +1,46 @@
 // TextClassification.js
-/*
-import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-import { AuthTokenContext } from '../../../App'; // Make sure AuthTokenContext is properly imported
-// import axios from 'axios';
 
+import React, { useState, useContext, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { AuthTokenContext } from '../../../../App';
 import {
   buttonStyle, containerStyle, inputContainerStyle, inputStyle,
 } from '../../styles/Styles';
+import './TextClassification.css';
 
 const BASEURL = process.env.NODE_ENV === 'development'
   ? process.env.REACT_APP_DEV
   : process.env.REACT_APP_PROD;
 
 function TextClassification() {
-  // sconst navigate = useNavigate();
   const { token } = useContext(AuthTokenContext);
   const [text, setText] = useState('');
-  const [classification, setClassification] = useState('');
+  const [messages, setMessages] = useState([]);
   const [feedbackMessage, setFeedbackMessage] = useState('');
-  const [errors] = useState({});
+
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const response = await fetch(`${BASEURL}/api/chat/history`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Assuming JWT for auth
+          },
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setMessages(data.messages); // Assuming the backend sends back an array of messages
+        } else {
+          throw new Error(data.error || 'Failed to fetch chat history');
+        }
+      } catch (error) {
+        setFeedbackMessage(error.toString());
+      }
+    };
+
+    getMessages();
+  }, [token]); // Token is a dependency if it might change over time
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -28,24 +49,27 @@ function TextClassification() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!text) {
-      setFeedbackMessage('Please enter some text to classify.');
+      setFeedbackMessage('Please enter some text to chat.');
       return;
     }
 
     try {
-      const response = await fetch(`${BASEURL}/api/text_class/classify`, {
+      const response = await fetch(`${BASEURL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // Assuming the token is a bearer token; otherwise adjust as needed
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ message: text }),
       });
 
       const data = await response.json();
       if (response.ok) {
-        setClassification(data.classification);
-        setFeedbackMessage('Classification received successfully.');
+        // Append the new message with a unique key
+        setMessages([...messages, { id: uuidv4(), text, classification: data.classification }]);
+        setText(''); // Clear the text input after sending
+        setFeedbackMessage('Message sent successfully.');
       } else {
         throw new Error(data.error || 'Unknown error occurred');
       }
@@ -58,25 +82,26 @@ function TextClassification() {
     <div style={containerStyle}>
       <form onSubmit={handleSubmit} style={inputContainerStyle}>
         <textarea
-          id="textToClassify"
+          id="messageInput"
           name="text"
           value={text}
           onChange={handleChange}
-          placeholder="Enter text to classify"
+          placeholder="Enter your message"
           style={inputStyle}
         />
-        {errors.text && <p style={{ color: 'red' }}>{errors.text}</p>}
-        <button type="submit" style={buttonStyle}>Classify Text</button>
+        <button type="submit" style={buttonStyle}>Send Message</button>
       </form>
-      <p>
-        Classification:
-        {' '}
-        {classification}
-      </p>
+      <div>
+        {messages.map((msg) => (
+          <div key={msg.id} style={msg.user ? { ...inputStyle, textAlign: 'right', backgroundColor: '#DCF8C6' } : { ...inputStyle, textAlign: 'left', backgroundColor: '#ECECEC' }}>
+            {msg.text}
+            {' '}
+            <em>{msg.classification}</em>
+          </div>
+        ))}
+      </div>
       {feedbackMessage && <p>{feedbackMessage}</p>}
     </div>
   );
 }
-
 export default TextClassification;
-*/

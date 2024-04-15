@@ -2,6 +2,7 @@
 depressiLess/models/depressiLess_models.py
 
 """
+
 from app import db
 from datetime import datetime
 

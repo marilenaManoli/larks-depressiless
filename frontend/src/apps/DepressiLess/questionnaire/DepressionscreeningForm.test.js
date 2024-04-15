@@ -61,6 +61,5 @@ describe('DepressionScreeningForm', () => {
     // Ensure appropriate error handling
     expect(window.alert).not.toHaveBeenCalledWith('Questionnaire submitted successfully!');
     expect(window.console.error).toHaveBeenCalledWith(expect.any(Error));
-    // You can also check for error feedback shown to the user
   });
 });

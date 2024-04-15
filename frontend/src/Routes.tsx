@@ -53,7 +53,7 @@ import DepressiLessUserMentalHealthHistory from './apps/DepressiLess/user_inform
 import DepressiLessDepressionScreeningForm from './apps/DepressiLess/questionnaire/DepressionScreeningForm';
 import DepressiLessChatSupport from './apps/DepressiLess/support_chat/speech_input/ChatSupport';
 import DepressiLessTextClassification from './apps/DepressiLess/support_chat/text_input/TextClassification';
-import DepressiLessSpeechRec from './apps/DepressiLess/support_chat/speech_input/SpeechRec';
+// import DepressiLessSpeechRec from './apps/DepressiLess/support_chat/speech_input/SpeechRec';
 import DepressiLessOnlineResources from './apps/DepressiLess/online_resources/OnlineResources';
 
 // If we want to check each time? Maybe it could be a use memo for when the token changes only?
@@ -120,7 +120,6 @@ function Routes() {
         <Route path="/DepressiLess/DepressionScreeningForm" element={<DepressiLessDepressionScreeningForm />} />
         <Route path="/DepressiLess/ChatSupport" element={<DepressiLessChatSupport />} />
         <Route path="/DepressiLess/TextClassification" element={<DepressiLessTextClassification />} />
-        <Route path="/DepressiLess/SpeechRec" element={<DepressiLessSpeechRec />} />
         <Route path="/DepressiLess/OnlineResources" element={<DepressiLessOnlineResources />} />
         <Route path="/DepressiLess/TermsOfService" element={<DepressiLessTermsOfService />} />
 

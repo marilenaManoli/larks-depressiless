@@ -49,7 +49,6 @@ function DepressionScreeningForm() {
       }
     } catch (error) {
       console.error('Failed to submit :', error);
-      // Handle error and provide feedback to the user
     }
   };
 

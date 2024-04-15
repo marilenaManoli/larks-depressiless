@@ -55,3 +55,4 @@ def convert_prediction_to_classification(predicted_class_id):
     """
     label_map = {0: "Non-Depression", 1: "Depression"}
     return label_map[predicted_class_id]
+

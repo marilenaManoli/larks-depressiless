@@ -46,3 +46,4 @@ def create_medical_history():
         exception_type = type(e).__name__
         logging.error("Unexpected Error - Type: %s, Message: %s", exception_type, str(e))
         return jsonify({"error": "An unexpected error occurred", "type": exception_type, "message": str(e)}), 500
+    

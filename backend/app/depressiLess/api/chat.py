@@ -48,3 +48,4 @@ def chat():
     }
 
     return jsonify(response)
+    

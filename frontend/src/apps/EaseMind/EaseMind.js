@@ -1,64 +1,48 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './EaseMind.css';
 import ChatBox from './ChatBox';
-
-// Pop up
-function PopUp({ show, onClose }) {
-  if (!show) {
-    return null;
-  }
-
-  return (
-    <div className="popupBackground">
-      <div className="popupContent">
-        <button type="button" className="popupClose" onClick={onClose}>&times;</button>
-        <h1>Warning:</h1>
-        <br />
-        <p>
-          This website is a project developed by a computer science student and is not a professional resource
-          for individuals with anxiety issues. If you are experiencing anxiety, please consult with qualified
-          professionals. Be aware that the content on this site might cause discomfort for some users.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// Define PropTypes for PopUp
-PopUp.propTypes = {
-  show: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
+import PopUp from './PopUp';
 
 function EaseMind() {
-  const [showPopUp, setShowPopUp] = useState(true);
+  // Initialize showPopUp based on whether the user has already agreed to the pop-up
+  const [showPopUp, setShowPopUp] = useState(() => {
+    const hasAgreed = localStorage.getItem('hasAgreedToPopUp');
+    return !hasAgreed;
+  });
 
   // Get user email
   const userEmail = sessionStorage.getItem('email')
     ? sessionStorage.getItem('email').substring(1, sessionStorage.getItem('email').length - 1)
     : 'User';
 
+  // Function to call when the PopUp is closed
+  const handlePopUpClose = () => {
+    setShowPopUp(false);
+    localStorage.setItem('hasAgreedToPopUp', 'true'); // Save flag indicating user has agreed
+  };
+
   return (
     <div className="easeMindContainer">
       <h1 className="easeMindTitle">
-        Welcome
-        {' '}
+        Welcome&nbsp;
         {userEmail}
         !
       </h1>
       <div>
         <Link to="/EaseMind_personal_details">
-          <button type="button" className="easeMindButton">Create My Details</button>
+          <button type="button" className="easeMindButton">Edit My Details</button>
         </Link>
         <Link to="/EaseMind_anxiety-level-test">
           <button type="button" className="easeMindButton">Anxiety Level Test</button>
         </Link>
+        <Link to="/EaseMind_report">
+          <button type="button" className="easeMindButton">Report</button>
+        </Link>
         <ChatBox />
       </div>
 
-      <PopUp show={showPopUp} onClose={() => setShowPopUp(false)} />
+      {showPopUp && <PopUp onClose={handlePopUpClose} />}
     </div>
   );
 }

@@ -43,9 +43,6 @@ def create_app(testing=False):
 
     from app.endpoints import auth_bp
     app.register_blueprint(auth_bp)
-    from .depressiLess import depressiLess_bp
-    app.register_blueprint(depressiLess_bp)
-
 
     # TODO: Logging
 
@@ -60,4 +57,3 @@ def create_app(testing=False):
     return app
 
 from app import models
-from .depressiLess.models import depressiLess_models

@@ -95,7 +95,7 @@ function Home() {
       to: '/DepressiLess',
       logo: depressiLessLogo,
       alt: 'DepressiLess App',
-      slogan: 'Speak freely, Heal Deeply with DepressiLess',
+      slogan: 'Be less depressed!',
     },
   ];
 

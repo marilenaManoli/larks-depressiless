@@ -1,3 +1,5 @@
+// DepressiLess.js
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -8,24 +10,64 @@ import onlineResourcesLogo from '../../images/onlineresources-logo.png';
 
 const containerStyle = {
   display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  height: '100vh', // Adjust the height to make it square
-  marginTop: '-50px',
+  height: '100vh',
+  backgroundColor: '#E2E9F9',
+};
+
+const wrapperStyle = {
+  border: '2px solid #DBE5FB',
+  borderRadius: '20px',
+  padding: '20px',
+  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '20px',
+  backgroundColor: '#FFFFFF',
+};
+
+const iconContainerStyle = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  maxWidth: '500px',
+  marginTop: '3rem',
+  marginBottom: '6rem',
 };
 
 const buttonStyle = {
-  width: '150px',
-  height: '150px',
-  border: '1px solid #ccc',
-  borderRadius: '5px',
-  margin: '5px',
+  width: '215px',
+  height: '200px',
+  border: 'none',
+  borderRadius: '10px',
+  margin: '10px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  cursor: 'pointer',
+  transition: 'transform 0.2s',
 };
 
-const messageStyle = {
-  marginBottom: '20px', // Add margin to create space between the message and buttons
-  fontSize: '24px', // Change the font size
-  color: 'blue', // Change the text color
+const termsButtonStyle = {
+  width: 'auto',
+  height: '50px',
+  padding: '0 10px',
+  border: 'none',
+  borderRadius: '10px',
+  margin: '0 20px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  cursor: 'pointer',
+  transition: 'transform 0.2s',
+  backgroundColor: '#CCCCCC',
+  color: 'black',
+  textDecoration: 'none',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontSize: '1rem',
+  marginTop: '40px',
 };
 
 function DepressiLess() {
@@ -35,29 +77,31 @@ function DepressiLess() {
 
   return (
     <div className="DepressiLess" style={containerStyle}>
-      <div>
-        <div style={{ textAlign: 'center', ...messageStyle }}>
-          <b>
-            <h1>
-              Welcome
-              {userEmail}
-              !
-            </h1>
-          </b>
+      <div style={wrapperStyle}>
+        <div>
+          <h1>
+            Welcome
+            <span style={{ fontStyle: 'italic' }}>{userEmail}</span>
+            !
+          </h1>
+          <h3>We are here to support you.</h3>
         </div>
-        <br />
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Link to="/depressiless/user-profile">
+
+        <div style={iconContainerStyle}>
+          <Link to="/depressiless/UserInfoForm">
             <img src={userProfileLogo} alt="User Profile" style={buttonStyle} />
           </Link>
-          <Link to="/depressiless/chat-support">
-            <img src={supportChatLogo} alt="Chat with Support" style={buttonStyle} />
-          </Link>
-          <Link to="/depressiless/fill-questionnaire">
+          <Link to="/depressiless/QuestionnaireForm">
             <img src={questionnaireLogo} alt="Fill Questionnaire" style={buttonStyle} />
           </Link>
-          <Link to="/depressiless/online-resources">
+          <Link to="/depressiless/ChatSupport">
+            <img src={supportChatLogo} alt="Chat with Support" style={buttonStyle} />
+          </Link>
+          <Link to="/depressiless/OnlineResources">
             <img src={onlineResourcesLogo} alt="Online Resources" style={buttonStyle} />
+          </Link>
+          <Link to="/DepressiLess/TermsOfService" style={termsButtonStyle}>
+            Read Terms of Service and Privacy Policy
           </Link>
         </div>
       </div>

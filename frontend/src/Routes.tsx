@@ -43,9 +43,18 @@ import EaseMind from './apps/EaseMind/EaseMind';
 import EaseMindPersonalDetails from './apps/EaseMind/PersonalDetails';
 import EaseMindAnxietyLevelTest from './apps/EaseMind/AnxietyLevelTest';
 import EaseMindChatBox from './apps/EaseMind/ChatBox';
-import EaseMindReport from './apps/EaseMind/report';
 
 import DepressiLess from './apps/DepressiLess/DepressiLess';
+import DepressiLessUserInfoForm from './apps/DepressiLess/user_information/UserInfoForm';
+import DepressiLessTermsOfService from './apps/DepressiLess/user_information/TermsOfService';
+import DepressiLessQuestionnaireForm from './apps/DepressiLess/questionnaire/QuestionnaireForm';
+import DepressiLessUserMedicalHistory from './apps/DepressiLess/user_information/UserMedicalHistory';
+import DepressiLessUserMentalHealthHistory from './apps/DepressiLess/user_information/UserMentalHealthHistory';
+import DepressiLessDepressionScreeningForm from './apps/DepressiLess/questionnaire/DepressionScreeningForm';
+import DepressiLessChatSupport from './apps/DepressiLess/support_chat/speech_input/ChatSupport';
+import DepressiLessTextClassification from './apps/DepressiLess/support_chat/text_input/TextClassification';
+// import DepressiLessSpeechRec from './apps/DepressiLess/support_chat/speech_input/SpeechRec';
+import DepressiLessOnlineResources from './apps/DepressiLess/online_resources/OnlineResources';
 
 // If we want to check each time? Maybe it could be a use memo for when the token changes only?
 // https://stackoverflow.com/questions/60017604/react-router-check-that-jwt-is-valid-before-rendering-a-private-route
@@ -98,13 +107,21 @@ function Routes() {
         <Route path="/EaseMind_personal_details" element={<EaseMindPersonalDetails />} />
         <Route path="/EaseMind_anxiety-level-test" element={<EaseMindAnxietyLevelTest />} />
         <Route path="/EaseMind_chatbox" element={<EaseMindChatBox />} />
-        <Route path="/EaseMind_report" element={<EaseMindReport />} />
 
         <Route path="/autism_instructions" element={<AutismDetector />} />
         <Route path="/autism_instructions/personaldetails" element={<AutismDetectorPersonalDetails />} />
         <Route path="/autism_instructions/questionnaire" element={<AutismDetectorQuestionnaire />} />
 
         <Route path="/DepressiLess" element={<DepressiLess />} />
+        <Route path="/DepressiLess/UserInfoForm" element={<DepressiLessUserInfoForm />} />
+        <Route path="/DepressiLess/QuestionnaireForm" element={<DepressiLessQuestionnaireForm />} />
+        <Route path="/DepressiLess/UserMentalHealthHistory" element={<DepressiLessUserMentalHealthHistory />} />
+        <Route path="/DepressiLess/UserMedicalHistory" element={<DepressiLessUserMedicalHistory />} />
+        <Route path="/DepressiLess/DepressionScreeningForm" element={<DepressiLessDepressionScreeningForm />} />
+        <Route path="/DepressiLess/ChatSupport" element={<DepressiLessChatSupport />} />
+        <Route path="/DepressiLess/TextClassification" element={<DepressiLessTextClassification />} />
+        <Route path="/DepressiLess/OnlineResources" element={<DepressiLessOnlineResources />} />
+        <Route path="/DepressiLess/TermsOfService" element={<DepressiLessTermsOfService />} />
 
       </Route>
 

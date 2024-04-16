@@ -1,3 +1,4 @@
+
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -10,7 +11,7 @@ stop_words = set(stopwords.words('english'))  # Load stopwords once, to improve 
 sia = SentimentIntensityAnalyzer()
 
 # Load the model and tokenizer at the start-up of the application
-model = AutoModelForSequenceClassification.from_pretrained('./depressiLess/models/depression_model')
+model = AutoModelForSequenceClassification.from_pretrained('/Users/marilenamanoli/Desktop/year_3/dissertation/code/larks/backend/app/depressiLess/models/depression_model')
 tokenizer = AutoTokenizer.from_pretrained('./depressiLess/models/depression_model')
 
 def classify_text(text):
